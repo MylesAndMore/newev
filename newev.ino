@@ -16,10 +16,10 @@ IMU imu;
 int64_t totalCountsL = 0, totalCountsR = 0;
 
 #define lerp(a, b, t) (a + t * (b - a))
-#define DRIVE_LERP 0.02
-#define DRIVE_KP 5
-#define DRIVE_KI 0.15
-#define DRIVE_KD 0.65
+#define DRIVE_LERP 0.01
+#define DRIVE_KP 12
+#define DRIVE_KI 0.1
+#define DRIVE_KD 0
 int16_t prevLeft = 0, prevRight = 0;
 double pidIn, pidOut, pidSet;
 PID pid(&pidIn, &pidOut, &pidSet, DRIVE_KP, DRIVE_KI, DRIVE_KD, DIRECT);
