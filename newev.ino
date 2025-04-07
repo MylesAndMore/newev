@@ -16,21 +16,21 @@ IMU imu;
 int64_t totalCountsL = 0, totalCountsR = 0;
 
 #define lerp(a, b, t) (a + t * (b - a))
-#define DRIVE_LERP 0.01
-#define DRIVE_KP 12
-#define DRIVE_KI 0.1
-#define DRIVE_KD 0
-int16_t prevLeft = 0, prevRight = 0;
+#define DRIVE_LERP 0.007
+#define DRIVE_KP 7.5
+#define DRIVE_KI 0.5
+#define DRIVE_KD 1.6
+float prevLeft = 0, prevRight = 0;
 double pidIn, pidOut, pidSet;
 PID pid(&pidIn, &pidOut, &pidSet, DRIVE_KP, DRIVE_KI, DRIVE_KD, DIRECT);
 
 void drive(int16_t left, int16_t right) {
   // Use linear interpolation to smooth out sharp accelerations
-  int16_t speedLeft = lerp(prevLeft, left, DRIVE_LERP);
+  float speedLeft = lerp(prevLeft, left, DRIVE_LERP);
   prevLeft = speedLeft;
-  int16_t speedRight = lerp(prevRight, right, DRIVE_LERP);
+  float speedRight = lerp(prevRight, right, DRIVE_LERP);
   prevRight = speedRight;
-  motors.setSpeeds(speedLeft, speedRight);
+  motors.setSpeeds((int16_t)speedLeft, (int16_t)speedRight);
 }
 
 float get_dist_traveled() {
@@ -48,7 +48,7 @@ void setup() {
   delay(500);
   encoders.init();
   imu.init();
-  pid.SetOutputLimits(-300, 300);
+  pid.SetOutputLimits(-150, 150); // Half of motor full range
   pid.SetMode(AUTOMATIC);
   // Turn LED on to indicate that all initialization is complete
   ledYellow(1);
